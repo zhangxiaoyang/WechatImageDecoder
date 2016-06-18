@@ -1,29 +1,27 @@
 WechatImageDecoder
 ===
 
-微信图片解密、找回撤回的图片
-
-PC端微信
----
+微信图片解密、找回撤回的图片。
 
 ```
 Usage:
-  python WechatImageDecoder.py [datfile] [imgfile]
+  python WechatImageDecoder.py [datfile]
 
 Example:
-  python WechatImageDecoder.py test.dat myimage.jpg
+  # PC:
+  python WechatImageDecoder.py 1234567890.dat
 
+  # Android:
+  python WechatImageDecoder.py cache.data.10
 ```
 
-其中，`datfile`为待解密的dat文件，存储路径为：`[X]:\Users\[USER]\Documents\WeChat Files\[WECHAT_USER]\Data`。如果想找回撤回的图片，可以查看文件的修改时间来选出一个候选的dat文件集合，然后对其逐一使用`WechatImageDecoder`来还原。
+其中，`datfile`为待解密的数据文件。
+- PC端文件名类似`1234567890.dat`，存储路径为：`[X]:\Users\[USER]\Documents\WeChat Files\[WECHAT_USER]\Data`
+- 手机端（Android）文件名类似`cache.data.10`，储存路径为：`/sdcard/tencent/MicroMsg/diskcache`。
 
-*对于使用手机端微信的朋友，有更加简便的方法，例如360卫士的“微信专清”功能，里面可以看到所有的聊天图片，包括被撤回的。*
+如果想找回撤回的图片，可以查看文件的修改时间来选出一个候选集合，然后对其逐一使用`WechatImageDecoder`来还原。
 
-
-手机端微信（Android）
----
-
-**TODO**
+*对于使用手机端微信的朋友，还有更加简便的方法，例如360卫士的“微信专清”功能，里面可以看到所有的聊天图片，包括被撤回的。*
 
 
 免责声明
