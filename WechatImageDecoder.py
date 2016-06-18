@@ -44,10 +44,8 @@ class WechatImageDecoder:
 
             imgfile = '%s_%d.jpg' % (datfile, i)
             with open(imgfile, 'wb') as f:
-                print last_index, m.start()
                 f.write(buf[last_index: m.start()])
             last_index = m.start()
-
 
     def _decode_unknown_dat(self, datfile):
         raise Exception('Unknown file type')
