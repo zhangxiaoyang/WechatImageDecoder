@@ -50,7 +50,7 @@ class WechatImageDecoder:
 
 
     def _decode_unknown_dat(self, datfile):
-        print 'Unknown file type'
+        raise Exception('Unknown file type')
 
 
 if __name__ == '__main__':
