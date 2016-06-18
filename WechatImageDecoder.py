@@ -21,7 +21,7 @@ if __name__ == '__main__':
             '  python WechatImageDecoder.py [datfile] [imgfile]',
             '',
             'Example:',
-            '  python WechatImageDecoder.py 1145141041336905947.dat myimage.jpg'
+            '  python WechatImageDecoder.py test.dat myimage.jpg'
         ])
         sys.exit(1)
 
