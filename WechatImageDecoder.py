@@ -28,7 +28,7 @@ class WechatImageDecoder:
         with open(datfile, 'rb') as f:
             buf = bytearray(f.read())
 
-        imgfile = re.sub(r'.dat$', '.jpg')
+        imgfile = re.sub(r'.dat$', '.jpg', datfile)
         with open(imgfile, 'wb') as f:
             newbuf = bytearray(map(lambda b: b ^ magic, list(buf)))
             f.write(str(newbuf))
