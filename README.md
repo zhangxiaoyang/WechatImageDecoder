@@ -3,6 +3,8 @@ WechatImageDecoder
 
 微信图片解密、找回撤回的图片。
 
+**实现原理：<http://mp.weixin.qq.com/s?__biz=MzIzNDM0OTM5NA==&mid=100000062&idx=1&sn=1108868694d9f2fb1273c1cb24631833#rd>**
+
 ```
 Usage:
   python WechatImageDecoder.py [datfile]
