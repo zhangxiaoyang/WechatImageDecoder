@@ -17,7 +17,7 @@ class WechatImageDecoder:
             None: self._decode_unknown_dat,
         }
 
-        for k, v in decoders.iteritems():
+        for k, v in decoders.items():
             if k is not None and re.match(k, datfile):
                 return v
         return decoders[None]
@@ -30,8 +30,8 @@ class WechatImageDecoder:
 
         imgfile = re.sub(r'.dat$', '.jpg', datfile)
         with open(imgfile, 'wb') as f:
-            newbuf = bytearray(map(lambda b: b ^ magic, list(buf)))
-            f.write(str(newbuf))
+            newbuf = bytearray([b ^ magic for b in list(buf)])
+            f.write(newbuf)
 
     def _decode_android_dat(self, datfile):
         with open(datfile, 'rb') as f:
@@ -54,7 +54,7 @@ class WechatImageDecoder:
 if __name__ == '__main__':
     import sys
     if len(sys.argv) != 2:
-        print '\n'.join([
+        print('\n'.join([
             'Usage:',
             '  python WechatImageDecoder.py [datfile]',
             '',
@@ -64,13 +64,13 @@ if __name__ == '__main__':
             '',
             '  # Android:',
             '  python WechatImageDecoder.py cache.data.10'
-        ])
+        ]))
         sys.exit(1)
 
     _,  datfile = sys.argv[:2]
     try:
         WechatImageDecoder(datfile)
     except Exception as e:
-        print e
+        print(e)
         sys.exit(1)
     sys.exit(0)
