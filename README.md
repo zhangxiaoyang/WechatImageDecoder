@@ -3,7 +3,13 @@ WechatImageDecoder
 
 微信图片解密、找回撤回的图片。
 
-**实现原理：<https://zhuanlan.zhihu.com/p/21388706>**
+**实现原理：**
+- 上篇：<https://zhuanlan.zhihu.com/p/21388706>
+- 下篇：<https://zhuanlan.zhihu.com/p/21458386>
+
+手机端可直接扫码查看：
+
+![](http://zhangxiaoyang.me/themes/default/images/qrcode.jpg)
 
 ```
 Usage:
