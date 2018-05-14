@@ -4,11 +4,10 @@
 import re
 
 class WechatImageDecoder:
-    def __init__(self, datfile):
-        datfile = datfile.lower()
-
+    def __init__(self, *args):
+        datfile = args[0]
         decoder = self._match_decoder(datfile)
-        decoder(datfile)
+        decoder(*args)
 
     def _match_decoder(self, datfile):
         decoders = {
@@ -18,16 +17,25 @@ class WechatImageDecoder:
         }
 
         for k, v in decoders.items():
-            if k is not None and re.match(k, datfile):
+            if k is not None and re.match(k, datfile.lower()):
                 return v
         return decoders[None]
 
-    def _decode_pc_dat(self, datfile):
+    def _decode_pc_dat(self, datfile, filetype):
+        header_map = {
+            'jpg': 0xff,
+            'png': 0x89,
+            'gif': 0x47,
+        }
+        filetype = filetype.lower()
+        if filetype not in header_map:
+            filetype = 'jpg'
+        header_code = header_map[filetype]
+
         with open(datfile, 'rb') as f:
             buf = bytearray(f.read())
-
-        magic = 0xff ^ list(buf)[0] if buf else 0x00
-        imgfile = re.sub(r'.dat$', '.jpg', datfile)
+        magic = header_code ^ list(buf)[0] if buf else 0x00
+        imgfile = re.sub(r'.dat$', '.' + filetype, datfile)
         with open(imgfile, 'wb') as f:
             newbuf = bytearray([b ^ magic for b in list(buf)])
             f.write(newbuf)
@@ -52,23 +60,23 @@ class WechatImageDecoder:
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         print('\n'.join([
             'Usage:',
-            '  python WechatImageDecoder.py [datfile]',
+            '  python WechatImageDecoder.py [datfile] [jpg|png|gif]',
             '',
             'Example:',
             '  # PC:',
-            '  python WechatImageDecoder.py 1234567890.dat',
+            '  python WechatImageDecoder.py 1234567890.dat jpg',
             '',
             '  # Android:',
             '  python WechatImageDecoder.py cache.data.10'
         ]))
         sys.exit(1)
 
-    _,  datfile = sys.argv[:2]
+    _,  datfile, filetype = sys.argv[:2] + [sys.argv[2] if len(sys.argv) > 2 else 'jpg']
     try:
-        WechatImageDecoder(datfile)
+        WechatImageDecoder(datfile, filetype)
     except Exception as e:
         print(e)
         sys.exit(1)
