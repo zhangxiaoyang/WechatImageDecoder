@@ -4,12 +4,13 @@
 import re
 
 class WechatImageDecoder:
-    def __init__(self, *args):
-        datfile = args[0]
-        decoder = self._match_decoder(datfile)
-        decoder(*args)
+    def __init__(self, dat_file):
+        dat_file = dat_file.lower()
 
-    def _match_decoder(self, datfile):
+        decoder = self._match_decoder(dat_file)
+        decoder(dat_file)
+
+    def _match_decoder(self, dat_file):
         decoders = {
             r'.+\.dat$': self._decode_pc_dat,
             r'cache\.data\.\d+$': self._decode_android_dat,
@@ -17,31 +18,44 @@ class WechatImageDecoder:
         }
 
         for k, v in decoders.items():
-            if k is not None and re.match(k, datfile.lower()):
+            if k is not None and re.match(k, dat_file):
                 return v
         return decoders[None]
 
-    def _decode_pc_dat(self, datfile, filetype):
-        header_map = {
-            'jpg': 0xff,
-            'png': 0x89,
-            'gif': 0x47,
-        }
-        filetype = filetype.lower()
-        if filetype not in header_map:
-            filetype = 'jpg'
-        header_code = header_map[filetype]
+    def _decode_pc_dat(self, dat_file):
+        
+        def do_magic(header_code, buf):
+            return header_code ^ list(buf)[0] if buf else 0x00
+        
+        def decode(magic, buf):
+            return bytearray([b ^ magic for b in list(buf)])
+            
+        def guess_encoding(buf):
+            headers = {
+                'jpg': (0xff, 0xd8),
+                'png': (0x89, 0x50),
+                'gif': (0x47, 0x49),
+            }
+            for encoding in headers:
+                header_code, check_code = headers[encoding] 
+                magic = do_magic(header_code, buf)
+                _, code = decode(magic, buf[:2])
+                if check_code == code:
+                    return (encoding, magic)
+            print('Decode failed')
+            sys.exit(1) 
 
-        with open(datfile, 'rb') as f:
+        with open(dat_file, 'rb') as f:
             buf = bytearray(f.read())
-        magic = header_code ^ list(buf)[0] if buf else 0x00
-        imgfile = re.sub(r'.dat$', '.' + filetype, datfile)
-        with open(imgfile, 'wb') as f:
-            newbuf = bytearray([b ^ magic for b in list(buf)])
-            f.write(newbuf)
+        file_type, magic = guess_encoding(buf)
 
-    def _decode_android_dat(self, datfile):
-        with open(datfile, 'rb') as f:
+        img_file = re.sub(r'.dat$', '.' + file_type, dat_file)
+        with open(img_file, 'wb') as f:
+            new_buf = decode(magic, buf)
+            f.write(new_buf)
+
+    def _decode_android_dat(self, dat_file):
+        with open(dat_file, 'rb') as f:
             buf = f.read()
 
         last_index = 0
@@ -49,34 +63,34 @@ class WechatImageDecoder:
             if m.start() == 0:
                 continue
 
-            imgfile = '%s_%d.jpg' % (datfile, i)
+            imgfile = '%s_%d.jpg' % (dat_file, i)
             with open(imgfile, 'wb') as f:
                 f.write(buf[last_index: m.start()])
             last_index = m.start()
 
-    def _decode_unknown_dat(self, datfile):
+    def _decode_unknown_dat(self, dat_file):
         raise Exception('Unknown file type')
 
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) < 2:
+    if len(sys.argv) != 2:
         print('\n'.join([
             'Usage:',
-            '  python WechatImageDecoder.py [datfile] [jpg|png|gif]',
+            '  python WechatImageDecoder.py [dat_file]',
             '',
             'Example:',
             '  # PC:',
-            '  python WechatImageDecoder.py 1234567890.dat jpg',
+            '  python WechatImageDecoder.py 1234567890.dat',
             '',
             '  # Android:',
             '  python WechatImageDecoder.py cache.data.10'
         ]))
         sys.exit(1)
 
-    _,  datfile, filetype = sys.argv[:2] + [sys.argv[2] if len(sys.argv) > 2 else 'jpg']
+    _,  dat_file = sys.argv[:2]
     try:
-        WechatImageDecoder(datfile, filetype)
+        WechatImageDecoder(dat_file)
     except Exception as e:
         print(e)
         sys.exit(1)
