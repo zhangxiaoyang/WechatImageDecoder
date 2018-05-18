@@ -6,8 +6,9 @@ WechatImageDecoder
 实现原理
 ---
 
-- 上篇：<https://zhuanlan.zhihu.com/p/21388706>
-- 下篇：<https://zhuanlan.zhihu.com/p/21458386>
+- [上篇](https://mp.weixin.qq.com/s?__biz=MzIzNDM0OTM5NA==&mid=2247483711&idx=1&sn=83c60e80ccd80d36e33c0950eba41680#rd)
+- [中篇](https://mp.weixin.qq.com/s?__biz=MzIzNDM0OTM5NA==&mid=2247483714&idx=1&sn=28684cc98a91edfe3e2dd7557cf25a42#rd)
+- [下篇](https://mp.weixin.qq.com/s?__biz=MzIzNDM0OTM5NA==&mid=2247483922&idx=1&sn=f5fc034da44a44822fd9a27519461ee1&chksm=e8f6f42fdf817d39b8f065e5d7a04335275fe27b0c4fdcaa7cb7ea0ec3e2af8014f3661b773f#rd)
 
 手机端可直接扫码查看：
 
