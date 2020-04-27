@@ -2,9 +2,16 @@
 # zhangxiaoyang.hit[at]gmail.com
 
 import re
+import os
+
+def check_and_create_dir(file_path):
+    dir = os.path.dirname(file_path)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
 class WechatImageDecoder:
-    def __init__(self, dat_file):
+    def __init__(self, dat_file,output_dir = "./"):
+        self.output_dir = output_dir
         dat_file = dat_file.lower()
 
         decoder = self._match_decoder(dat_file)
@@ -50,7 +57,9 @@ class WechatImageDecoder:
         file_type, magic = guess_encoding(buf)
 
         img_file = re.sub(r'.dat$', '.' + file_type, dat_file)
-        with open(img_file, 'wb') as f:
+        fp = os.path.join(self.output_dir,img_file)
+        check_and_create_dir(fp)
+        with open(fp, 'wb') as f:
             new_buf = decode(magic, buf)
             f.write(new_buf)
 
@@ -64,7 +73,9 @@ class WechatImageDecoder:
                 continue
 
             imgfile = '%s_%d.jpg' % (dat_file, i)
-            with open(imgfile, 'wb') as f:
+            fp = os.path.join(self.output_dir,imgfile)
+            check_and_create_dir(fp)
+            with open(fp, 'wb') as f:
                 f.write(buf[last_index: m.start()])
             last_index = m.start()
 
@@ -88,9 +99,21 @@ if __name__ == '__main__':
         ]))
         sys.exit(1)
 
-    _,  dat_file = sys.argv[:2]
+    _,  path = sys.argv[:2]
+    output = "./output"
+    if len(sys.argv) == 3:
+        output = sys.argv[2]
     try:
-        WechatImageDecoder(dat_file)
+        if not os.path.isdir(path):
+            WechatImageDecoder(path)
+        else:
+            for p,d,filelist in os.walk(path):
+                #print d
+                for filename in filelist:
+                    file_path = os.path.join(p, filename)
+                    print file_path
+                    WechatImageDecoder(file_path,output)
+        
     except Exception as e:
         print(e)
         sys.exit(1)
