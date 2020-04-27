@@ -20,6 +20,7 @@ WechatImageDecoder
 ```
 Usage:
   python WechatImageDecoder.py [datfile]
+  python WechatImageDecoder.py [dir] [output_dir]
 
 Example:
   # PC:
@@ -27,11 +28,16 @@ Example:
 
   # Android:
   python WechatImageDecoder.py cache.data.10
+
+  # Batch process:
+  python WechatImageDecoder.py images output
 ```
 
 其中，`datfile`为待解密的数据文件。
 - PC端文件名类似`1234567890.dat`，存储路径为：`[X]:\Users\[USER]\Documents\WeChat Files\[WECHAT_USER]\Data`
 - 手机端（Android）文件名类似`cache.data.10`，储存路径为：`/sdcard/tencent/MicroMsg/diskcache`。
+
+新增批处理功能：dir为dat文件的路径，output_dir为输出的图片文件路径，output_dir中会保留源文件夹的结构。
 
 如果想找回撤回的图片，可以查看文件的修改时间来选出一个候选集合，然后对其逐一使用`WechatImageDecoder`来还原。
 
