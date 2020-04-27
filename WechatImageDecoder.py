@@ -89,6 +89,7 @@ if __name__ == '__main__':
         print('\n'.join([
             'Usage:',
             '  python WechatImageDecoder.py [dat_file]',
+            '  python WechatImageDecoder.py [dir] [output_dir]',
             '',
             'Example:',
             '  # PC:',
@@ -96,6 +97,10 @@ if __name__ == '__main__':
             '',
             '  # Android:',
             '  python WechatImageDecoder.py cache.data.10'
+            '',
+            '  # Batch process:',
+            '  python WechatImageDecoder.py images output'
+            ''
         ]))
         sys.exit(1)
 
@@ -111,7 +116,7 @@ if __name__ == '__main__':
                 #print d
                 for filename in filelist:
                     file_path = os.path.join(p, filename)
-                    print file_path
+                    print(file_path)
                     WechatImageDecoder(file_path,output)
         
     except Exception as e:
